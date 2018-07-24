@@ -10,11 +10,12 @@
     "start": "node app.js"
   },
   "dependencies": {
+    "apn": "^2.2.0",
     "body-parser": "^1.16.1",
     "command-line-args": "^5.0.1",
     "csurf": "^1.9.0",
     "ejs": "^2.5.7",
-    "express": "4.13.3",
+    "express": "^4.16.3",
     "express-session": "^1.15.6",
     "http-auth": "^3.2.3",
     "memory-cache": "^0.2.0",
