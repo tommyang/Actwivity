@@ -17,17 +17,17 @@ activityParser.parse = activity => {
         result.acting_user = event["user"]["screen_name"]
         result.acting_user_id = event["user"]["id_str"]
         result.tweetid = event["id_str"]
-        if (event["is_quote_status"]) {
-            result.action = activityParser.ACTION.QUOTE
-            result.target_user = event["quoted_status"]["user"]["screen_name"]
-            result.text = event["text"]
-        } else if (event.hasOwnProperty("retweeted_status")) {
+        if (event.hasOwnProperty("retweeted_status")) {
             result.action = activityParser.ACTION.RT
             result.target_user =
                 event["retweeted_status"]["user"]["screen_name"]
             result.target_user =
                 event["retweeted_status"]["user"]["screen_name"]
             result.text = event["retweeted_status"]["text"]
+        } else if (event["is_quote_status"]) {
+            result.action = activityParser.ACTION.QUOTE
+            result.target_user = event["quoted_status"]["user"]["screen_name"]
+            result.text = event["text"]
         } else if (event["in_reply_to_user_id_str"] != null) {
             result.action = activityParser.ACTION.REPLY
             result.target_user = event["in_reply_to_screen_name"]
@@ -39,13 +39,16 @@ activityParser.parse = activity => {
             result.action = activityParser.ACTION.FOLLOW
             result.acting_user = event["source"]["screen_name"]
             result.acting_user_id = event["source"]["id"]
+            result.target_user = event["target"]["screen_name"]
         }
     } else if (activity["favorite_events"] != null) {
         const event = activity["favorite_events"][0]
         if (activity["for_user_id"] != event["user"]["id_str"]) {
             result.action = activityParser.ACTION.FAV
             result.acting_user = event["user"]["screen_name"]
-            result.acting_user_id = event["source"]["id_str"]
+            result.acting_user_id = event["user"]["id_str"]
+            result.target_user =
+                event["favorited_status"]["user"]["screen_name"]
             result.text = event["favorited_status"]["text"]
         }
     } else if (activity["direct_message_events"] != null) {
@@ -57,7 +60,7 @@ activityParser.parse = activity => {
             result.action = activityParser.ACTION.DM
             result.acting_user_id = event["message_create"]["sender_id"]
             result.acting_user =
-                event["users"][result.acting_user_id]["screen_name"]
+                activity["users"][result.acting_user_id]["screen_name"]
             result.text = event["message_create"]["message_data"]["text"]
         }
     }
