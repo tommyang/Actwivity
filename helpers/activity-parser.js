@@ -14,8 +14,8 @@ activityParser.parse = activity => {
     var result = { action: activityParser.ACTION.UNKNOWN }
     if (activity["tweet_create_events"] != null) {
         const event = activity["tweet_create_events"][0]
-        result.acting_user = event["user"]["screen_name"]
-        result.acting_user_id = event["user"]["id_str"]
+        result.source_user = event["user"]["screen_name"]
+        result.source_user_id = event["user"]["id_str"]
         result.tweetid = event["id_str"]
         if (event.hasOwnProperty("retweeted_status")) {
             result.action = activityParser.ACTION.RT
@@ -37,16 +37,16 @@ activityParser.parse = activity => {
         const event = activity["follow_events"][0]
         if (activity["for_user_id"] != event["source"]["id"]) {
             result.action = activityParser.ACTION.FOLLOW
-            result.acting_user = event["source"]["screen_name"]
-            result.acting_user_id = event["source"]["id"]
+            result.source_user = event["source"]["screen_name"]
+            result.source_user_id = event["source"]["id"]
             result.target_user = event["target"]["screen_name"]
         }
     } else if (activity["favorite_events"] != null) {
         const event = activity["favorite_events"][0]
         if (activity["for_user_id"] != event["user"]["id_str"]) {
             result.action = activityParser.ACTION.FAV
-            result.acting_user = event["user"]["screen_name"]
-            result.acting_user_id = event["user"]["id_str"]
+            result.source_user = event["user"]["screen_name"]
+            result.source_user_id = event["user"]["id_str"]
             result.target_user =
                 event["favorited_status"]["user"]["screen_name"]
             result.text = event["favorited_status"]["text"]
@@ -58,9 +58,9 @@ activityParser.parse = activity => {
         }
         if (activity["for_user_id"] != event["message_create"]["sender_id"]) {
             result.action = activityParser.ACTION.DM
-            result.acting_user_id = event["message_create"]["sender_id"]
-            result.acting_user =
-                activity["users"][result.acting_user_id]["screen_name"]
+            result.source_user_id = event["message_create"]["sender_id"]
+            result.source_user =
+                activity["users"][result.source_user_id]["screen_name"]
             const target_user_id =
                 event["message_create"]["target"]["recipient_id"]
             result.target_user =

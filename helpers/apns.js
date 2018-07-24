@@ -24,7 +24,7 @@ apns.buildNotification = parsedActivity => {
     notification.topic = "org.tommyang.Actwivity-iOS"
     notification.expiry = Math.floor(Date.now() / 1000) + 3600
     notification.aps.category = parsedActivity.action.type
-    notification.title = `@${parsedActivity.acting_user} ${
+    notification.title = `@${parsedActivity.source_user} ${
         parsedActivity.action.desc
     } [${parsedActivity.target_user}]`
     if (parsedActivity.text != null) {
