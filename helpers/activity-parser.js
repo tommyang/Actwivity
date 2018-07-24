@@ -1,12 +1,12 @@
 var activityParser = {}
 
 activityParser.ACTION = Object.freeze({
-    QUOTE: { type: "QUOTE", desc: "quoted your tweet" },
-    RT: { type: "RT", desc: "retweeted your tweet" },
-    REPLY: { type: "REPLY", desc: "replied to your tweet" },
-    FOLLOW: { type: "FOLLOW", desc: "followed you" },
-    FAV: { type: "FAV", desc: "favorited your tweet" },
-    DM: { type: "DM", desc: "messaged you" },
+    QUOTE: { type: "QUOTE", desc: "quoted" },
+    RT: { type: "RT", desc: "retweeted" },
+    REPLY: { type: "REPLY", desc: "mentioned" },
+    FOLLOW: { type: "FOLLOW", desc: "followed" },
+    FAV: { type: "FAV", desc: "favorited" },
+    DM: { type: "DM", desc: "direct messaged" },
     UNKNOWN: { type: "UNKNOWN", desc: "unknown" }
 })
 
@@ -16,7 +16,7 @@ activityParser.parse = activity => {
         const event = activity["tweet_create_events"][0]
         result.source_user = event["user"]["screen_name"]
         result.source_user_id = event["user"]["id_str"]
-        result.tweetid = event["id_str"]
+        result.tweet_id = event["id_str"]
         if (event.hasOwnProperty("retweeted_status")) {
             result.action = activityParser.ACTION.RT
             result.target_user =
