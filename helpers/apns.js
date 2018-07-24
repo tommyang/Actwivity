@@ -27,7 +27,9 @@ apns.buildNotification = parsedActivity => {
     notification.title = `@${parsedActivity.acting_user} ${
         parsedActivity.action.desc
     } [${parsedActivity.target_user}]`
-    notification.body = `${parsedActivity.text}`
+    if (parsedActivity.text != null) {
+        notification.body = parsedActivity.text
+    }
     // notification.threadId = ""
     // notification.payload = {
     // }
