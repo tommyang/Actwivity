@@ -66,18 +66,16 @@ app.get('/webhook/twitter', function(request, response) {
 app.post('/webhook/twitter', function(request, response) {
   console.log(request.body)
 
-  const parsedActivity = activityParser.parse(request.body)
-  console.log(parsedActivity)
-  apns.sendNotification(parsedActivity)
-
-  console.log(request.body)
-
   socket.io.emit(socket.activity_event, {
     internal_id: uuid(),
     event: request.body
   })
 
   response.send('200 OK')
+
+  const parsedActivity = activityParser.parse(request.body)
+  console.log(parsedActivity)
+  apns.sendNotification(parsedActivity)
 })
 
 
