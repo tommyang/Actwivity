@@ -61,6 +61,10 @@ activityParser.parse = activity => {
             result.acting_user_id = event["message_create"]["sender_id"]
             result.acting_user =
                 activity["users"][result.acting_user_id]["screen_name"]
+            const target_user_id =
+                event["message_create"]["target"]["recipient_id"]
+            result.target_user =
+                activity["users"][target_user_id]["screen_name"]
             result.text = event["message_create"]["message_data"]["text"]
         }
     }
