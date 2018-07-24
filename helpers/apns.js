@@ -16,13 +16,17 @@ const options = {
 apns.apnProvider = new apn.Provider(options)
 
 apns.buildNotification = parsedActivity => {
+    if (parsedActivity.action.type === "UNKNOWN") {
+        console.log("Error UNKNOWN Activity")
+        return null
+    }
     var notification = new apn.Notification()
     notification.topic = "org.tommyang.Actwivity-iOS"
     notification.expiry = Math.floor(Date.now() / 1000) + 3600
     notification.aps.category = parsedActivity.action.type
     notification.title = `@${parsedActivity.acting_user} ${
         parsedActivity.action.desc
-    } you [${parsedActivity.target_user}]`
+    } [${parsedActivity.target_user}]`
     notification.body = `${parsedActivity.text}`
     // notification.threadId = ""
     // notification.payload = {
@@ -31,22 +35,24 @@ apns.buildNotification = parsedActivity => {
 }
 
 apns.sendNotification = (parsedActivity, deviceToken) => {
+    const notification = apns.buildNotification(parsedActivity)
+    if (notification == null) {
+        return
+    }
     deviceToken = process.env.TEMP_DEVICETOKEN // FIXME: rm
-    apnProvider
-        .send(apns.buildNotification(parsedActivity), deviceToken)
-        .then(response => {
-            response.sent.forEach(token => {
-                // success
-            })
-            response.failed.forEach(failure => {
-                if (failure.error) {
-                    console.log(failure.error)
-                } else {
-                    console.log(failure.response)
-                    // TODO
-                }
-            })
+    apns.apnProvider.send(notification, deviceToken).then(response => {
+        response.sent.forEach(token => {
+            // success
         })
+        response.failed.forEach(failure => {
+            if (failure.error) {
+                console.log(failure.error)
+            } else {
+                console.log(failure.response)
+                // TODO
+            }
+        })
+    })
 }
 
 module.exports = apns

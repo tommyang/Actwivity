@@ -64,7 +64,7 @@ app.get('/webhook/twitter', function(request, response) {
  * Receives Account Acitivity events
  **/
 app.post('/webhook/twitter', function(request, response) {
-  // console.log(request.body)
+  console.log(request.body)
 
   const parsedActivity = activityParser.parse(request.body)
   console.log(parsedActivity)

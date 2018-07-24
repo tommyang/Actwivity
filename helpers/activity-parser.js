@@ -28,7 +28,7 @@ activityParser.parse = activity => {
             result.target_user =
                 event["retweeted_status"]["user"]["screen_name"]
             result.text = event["retweeted_status"]["text"]
-        } else if (event["in_reply_to_status_id_str"] != null) {
+        } else if (event["in_reply_to_user_id_str"] != null) {
             result.action = activityParser.ACTION.REPLY
             result.target_user = event["in_reply_to_screen_name"]
             result.text = event["text"]
@@ -36,10 +36,9 @@ activityParser.parse = activity => {
     } else if (activity["follow_events"] != null) {
         const event = activity["follow_events"][0]
         if (activity["for_user_id"] != event["source"]["id"]) {
-            result.action = activityParser.ACTION.QUOTE
+            result.action = activityParser.ACTION.FOLLOW
             result.acting_user = event["source"]["screen_name"]
             result.acting_user_id = event["source"]["id"]
-            result.text = event["text"]
         }
     } else if (activity["favorite_events"] != null) {
         const event = activity["favorite_events"][0]
