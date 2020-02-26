@@ -8,6 +8,8 @@ const security = require('./helpers/security')
 const auth = require('./helpers/auth')
 const cacheRoute = require('./helpers/cache-route')
 const socket = require('./helpers/socket')
+const activityParser = require('./helpers/activity-parser')
+const apns = require('./helpers/apns')
 
 const app = express()
 
@@ -62,15 +64,18 @@ app.get('/webhook/twitter', function(request, response) {
  * Receives Account Acitivity events
  **/
 app.post('/webhook/twitter', function(request, response) {
-
   console.log(request.body)
-  
+
   socket.io.emit(socket.activity_event, {
     internal_id: uuid(),
     event: request.body
   })
 
   response.send('200 OK')
+
+  const parsedActivity = activityParser.parse(request.body)
+  console.log(parsedActivity)
+  apns.sendNotification(parsedActivity)
 })
 
 
